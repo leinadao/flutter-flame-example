@@ -37,11 +37,10 @@ class MapLoader {
         json.decode(await rootBundle.loadString('assets/collision_map.json'));
 
     for (final dynamic data in collisionMap['objects']) {
-      collidableRects.add(Rect.fromLTWH(
-          data['x'] as double,
-          data['y'] as double,
-          data['width'] as double,
-          data['height'] as double));
+      collidableRects.add(
+        Rect.fromLTWH(data['x'] as double, data['y'] as double,
+            data['width'] as double, data['height'] as double),
+      );
     }
 
     return collidableRects;
