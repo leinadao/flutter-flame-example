@@ -20,7 +20,6 @@ class Player extends SpriteAnimationComponent with HasGameRef {
   @override
   Future<void> onLoad() async {
     _loadAnimations().then((_) => {animation = _standingAnimation});
-    position = gameRef.size / 2;
   }
 
   Future<void> _loadAnimations() async {

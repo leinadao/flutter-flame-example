@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flame/game.dart';
 import '../helpers/direction.dart';
 import 'components/player.dart';
@@ -11,6 +12,11 @@ class FFEGame extends FlameGame {
   Future<void> onLoad() async {
     await add(_world);
     add(_player);
+    _player.position = _world.size / 2;
+    camera.followComponent(
+      _player,
+      worldBounds: Rect.fromLTRB(0, 0, _world.size.x, _world.size.y),
+    );
   }
 
   void onJoypadDirectionChanged(Direction direction) {
