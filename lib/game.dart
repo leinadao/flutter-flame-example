@@ -1,13 +1,16 @@
-import 'dart:ui';
-import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import '../helpers/direction.dart';
 import '../helpers/map_loader.dart';
 import 'components/player.dart';
 import 'components/world_collidable.dart';
 import 'components/world.dart';
 
-class FFEGame extends FlameGame with HasCollidables {
+import 'package:flutter/foundation.dart';
+
+class FFEGame extends FlameGame with HasCollidables, KeyboardEvents {
   final Player _player = Player();
   final World _world = World();
 
@@ -34,4 +37,35 @@ class FFEGame extends FlameGame with HasCollidables {
           ..width = rect.width
           ..height = rect.height);
       });
+
+  @override
+  KeyEventResult onKeyEvent(
+    RawKeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
+    final isKeyDown = event is RawKeyDownEvent;
+    Direction? keyDirection = null;
+
+    if ([LogicalKeyboardKey.keyA, LogicalKeyboardKey.arrowLeft]
+        .contains(event.logicalKey)) {
+      keyDirection = Direction.left;
+    } else if ([LogicalKeyboardKey.keyD, LogicalKeyboardKey.arrowRight]
+        .contains(event.logicalKey)) {
+      keyDirection = Direction.right;
+    } else if ([LogicalKeyboardKey.keyW, LogicalKeyboardKey.arrowUp]
+        .contains(event.logicalKey)) {
+      keyDirection = Direction.up;
+    } else if ([LogicalKeyboardKey.keyS, LogicalKeyboardKey.arrowDown]
+        .contains(event.logicalKey)) {
+      keyDirection = Direction.down;
+    }
+
+    if (isKeyDown && keyDirection != null) {
+      _player.direction = keyDirection;
+    } else if (_player.direction == keyDirection) {
+      _player.direction = Direction.none;
+    }
+
+    return super.onKeyEvent(event, keysPressed);
+  }
 }
