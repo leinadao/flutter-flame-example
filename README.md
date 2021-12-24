@@ -1,6 +1,8 @@
 # flutter_flame_example
 
-A new Flutter project.
+A Flutter Flame game example following:
+
+https://www.raywenderlich.com/27407121-building-games-in-flutter-with-flame-getting-started
 
 ## Getting Started
 
