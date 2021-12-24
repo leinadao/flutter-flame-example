@@ -58,6 +58,8 @@ class FFEGame extends FlameGame with HasCollidables, KeyboardEvents {
     } else if ([LogicalKeyboardKey.keyS, LogicalKeyboardKey.arrowDown]
         .contains(event.logicalKey)) {
       keyDirection = Direction.down;
+    } else if (isKeyDown && event.logicalKey == LogicalKeyboardKey.space) {
+      _player.startJump();
     }
 
     if (isKeyDown && keyDirection != null) {
