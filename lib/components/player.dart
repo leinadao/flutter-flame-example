@@ -2,18 +2,26 @@ import 'package:flame/components.dart';
 import 'package:flame/geometry.dart';
 import 'package:flame/sprite.dart';
 import '../helpers/direction.dart';
-import 'world_collidable.dart';
 
 class Player extends SpriteAnimationComponent
     with HasGameRef, Hitbox, Collidable {
-  Direction direction = Direction.none;
+  Direction _direction = Direction.none;
+  Direction _lastNonNoneDirection =
+      Direction.none; // TODO: Update enum so never none at start??
   final double _playerSpeed = 100.0;
   final double _animationSpeed = 0.15;
+  final _spriteRowDown = 0;
+  final _spriteRowLeft = 1;
+  final _spriteRowUp = 2;
+  final _spriteRowRight = 3;
   late final SpriteAnimation _runDownAnimation;
   late final SpriteAnimation _runLeftAnimation;
   late final SpriteAnimation _runUpAnimation;
   late final SpriteAnimation _runRightAnimation;
-  late final SpriteAnimation _standingAnimation;
+  late final SpriteAnimation _standingDownAnimation;
+  late final SpriteAnimation _standingLeftAnimation;
+  late final SpriteAnimation _standingUpAnimation;
+  late final SpriteAnimation _standingRightAnimation;
   Direction _collisionDirection = Direction.none;
   bool _hasCollided = false;
 
@@ -24,9 +32,20 @@ class Player extends SpriteAnimationComponent
     addHitbox(HitboxRectangle());
   }
 
+  Direction get direction {
+    return _direction;
+  }
+
+  void set direction(Direction newDirection) {
+    if (newDirection != Direction.none) {
+      _lastNonNoneDirection = newDirection;
+    }
+    _direction = newDirection;
+  }
+
   @override
   Future<void> onLoad() async {
-    _loadAnimations().then((_) => {animation = _standingAnimation});
+    _loadAnimations().then((_) => {animation = _standingDownAnimation});
   }
 
   Future<void> _loadAnimations() async {
@@ -35,16 +54,46 @@ class Player extends SpriteAnimationComponent
       srcSize: Vector2(29.0, 32.0),
     );
 
-    _runDownAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: _animationSpeed, to: 4);
-    _runLeftAnimation =
-        spriteSheet.createAnimation(row: 1, stepTime: _animationSpeed, to: 4);
-    _runUpAnimation =
-        spriteSheet.createAnimation(row: 2, stepTime: _animationSpeed, to: 4);
-    _runRightAnimation =
-        spriteSheet.createAnimation(row: 3, stepTime: _animationSpeed, to: 4);
-    _standingAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: _animationSpeed, to: 1);
+    _runDownAnimation = spriteSheet.createAnimation(
+      row: _spriteRowDown,
+      stepTime: _animationSpeed,
+      to: 4,
+    );
+    _runLeftAnimation = spriteSheet.createAnimation(
+      row: _spriteRowLeft,
+      stepTime: _animationSpeed,
+      to: 4,
+    );
+    _runUpAnimation = spriteSheet.createAnimation(
+      row: _spriteRowUp,
+      stepTime: _animationSpeed,
+      to: 4,
+    );
+    _runRightAnimation = spriteSheet.createAnimation(
+      row: _spriteRowRight,
+      stepTime: _animationSpeed,
+      to: 4,
+    );
+    _standingDownAnimation = spriteSheet.createAnimation(
+      row: _spriteRowDown,
+      stepTime: _animationSpeed,
+      to: 1,
+    );
+    _standingLeftAnimation = spriteSheet.createAnimation(
+      row: _spriteRowLeft,
+      stepTime: _animationSpeed,
+      to: 1,
+    );
+    _standingUpAnimation = spriteSheet.createAnimation(
+      row: _spriteRowUp,
+      stepTime: _animationSpeed,
+      to: 1,
+    );
+    _standingRightAnimation = spriteSheet.createAnimation(
+      row: _spriteRowRight,
+      stepTime: _animationSpeed,
+      to: 1,
+    );
   }
 
   @override
@@ -54,7 +103,7 @@ class Player extends SpriteAnimationComponent
   }
 
   void movePlayer(double delta) {
-    switch (direction) {
+    switch (_direction) {
       case Direction.up:
         if (canPlayerMoveUp()) {
           animation = _runUpAnimation;
@@ -80,7 +129,20 @@ class Player extends SpriteAnimationComponent
         }
         break;
       case Direction.none:
-        animation = _standingAnimation;
+        switch (_lastNonNoneDirection) {
+          case Direction.up:
+            animation = _standingUpAnimation;
+            break;
+          case Direction.left:
+            animation = _standingLeftAnimation;
+            break;
+          case Direction.right:
+            animation = _standingRightAnimation;
+            break;
+          default:
+            animation = _standingDownAnimation;
+            break;
+        }
         break;
     }
   }
@@ -133,7 +195,7 @@ class Player extends SpriteAnimationComponent
   void onCollision(Set<Vector2> intersectionPoints, Collidable other) {
     if (!_hasCollided) {
       _hasCollided = true;
-      _collisionDirection = direction;
+      _collisionDirection = _direction;
     }
   }
 
