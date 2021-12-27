@@ -10,7 +10,8 @@ import 'components/world.dart';
 
 import 'package:flutter/foundation.dart';
 
-class FFEGame extends FlameGame with HasCollidables, KeyboardEvents {
+class FFEGame extends FlameGame
+    with HasCollidables, KeyboardEvents, DoubleTapDetector {
   final Player _player = Player();
   final World _world = World();
 
@@ -28,6 +29,11 @@ class FFEGame extends FlameGame with HasCollidables, KeyboardEvents {
 
   void onJoypadDirectionChanged(Direction direction) {
     _player.direction = direction;
+  }
+
+  @override
+  void onDoubleTap() {
+    _player.startJump();
   }
 
   void addWorldCollision() async =>
