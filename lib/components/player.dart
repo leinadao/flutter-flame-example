@@ -14,8 +14,8 @@ class Player extends SpriteAnimationComponent
   final double _jumpTime = 0.5; // ms // TODO: extend a type?
   final double _animationSpeed = 0.15;
   final _spriteRowDown = 0;
-  final _spriteRowLeft = 1;
-  final _spriteRowUp = 2;
+  final _spriteRowUp = 1;
+  final _spriteRowLeft = 2;
   final _spriteRowRight = 3;
   late final SpriteAnimation _runDownAnimation;
   late final SpriteAnimation _runLeftAnimation;
@@ -56,8 +56,8 @@ class Player extends SpriteAnimationComponent
 
   Future<void> _loadAnimations() async {
     final spriteSheet = SpriteSheet(
-      image: await gameRef.images.load('player_spritesheet.png'),
-      srcSize: Vector2(29.0, 32.0),
+      image: await gameRef.images.load('fairy1.6.png'),
+      srcSize: Vector2(32.0, 32.0),
     );
 
     _runDownAnimation = spriteSheet.createAnimation(
