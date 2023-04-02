@@ -1,10 +1,10 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/geometry.dart';
 import 'package:flame/sprite.dart';
 import '../helpers/direction.dart';
 
 class Player extends SpriteAnimationComponent
-    with HasGameRef, Hitbox, Collidable {
+    with HasGameRef, CollisionCallbacks {
   Direction _direction = Direction.none;
   double _altitude = 0;
   Direction _lastNonNoneDirection =
@@ -34,7 +34,7 @@ class Player extends SpriteAnimationComponent
       : super(
           size: Vector2.all(50.0),
         ) {
-    addHitbox(HitboxRectangle());
+    add(RectangleHitbox());
     _jumpTimer = Timer(_jumpTime);
   }
 
@@ -220,7 +220,7 @@ class Player extends SpriteAnimationComponent
   }
 
   @override
-  void onCollision(Set<Vector2> intersectionPoints, Collidable other) {
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent into) {
     if (!_hasCollided) {
       _hasCollided = true;
       _collisionDirection = _direction;
@@ -228,7 +228,7 @@ class Player extends SpriteAnimationComponent
   }
 
   @override
-  void onCollisionEnd(Collidable other) {
+  void onCollisionEnd(PositionComponent into) {
     _hasCollided = false;
   }
 }

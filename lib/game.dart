@@ -11,7 +11,7 @@ import 'components/world.dart';
 import 'package:flutter/foundation.dart';
 
 class FFEGame extends FlameGame
-    with HasCollidables, KeyboardEvents, DoubleTapDetector {
+    with HasCollisionDetection, KeyboardEvents, DoubleTapDetector {
   final Player _player = Player();
   final World _world = World();
 

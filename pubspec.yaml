@@ -12,9 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: 1.0.2
-  flame: 1.0.0-releasecandidate.15
-  tiledjsonreader: 1.0.4
+  cupertino_icons: ^1.0.5
+  flame: ^1.6.0
+  tiledjsonreader: ^1.2.6
 
 dev_dependencies:
   flutter_test:
